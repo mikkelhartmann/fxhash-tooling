@@ -1,0 +1,6 @@
+dist/
+dist-zipped/
+node_modules/
+screenshots/
+
+.DS_store
