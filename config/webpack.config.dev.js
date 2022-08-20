@@ -4,6 +4,9 @@ module.exports = {
   ...config,
   mode: "development",
   devServer: {
+    // We allow all host headers to enable development in cloud-based developer
+    // environments like Gitpod
+    allowedHosts: 'all',
     // disables the Hot Module Replacement feature because probably not ideal
     // in the context of generative art
     // https://webpack.js.org/concepts/hot-module-replacement/
