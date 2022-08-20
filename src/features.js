@@ -1,14 +1,14 @@
-function getFeatures(fxrand) {
+export function getFeatures(fxrand) {
 
 
-    let getShape = function() {
+    let getShape = function () {
         return random(['circle', 'square']) //
-       
+
     }
 
-    let getBackgroundColor = function() {
+    let getBackgroundColor = function () {
 
-        colors = [
+        const colors = [
             {
                 'name': '1',
                 'background': '#4F4978',
@@ -44,14 +44,14 @@ function getFeatures(fxrand) {
         return random(colors)
     }
 
-    features = {
+    const features = {
         'palette': getBackgroundColor(),
         'shape': getShape(),
     }
 
     for (const [key, value] of Object.entries(features)) {
         console.log(key, value);
-      }
+    }
 
     return features
 
