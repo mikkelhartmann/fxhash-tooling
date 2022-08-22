@@ -1,0 +1,56 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 5%;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #1E1E1E;
+  font-family: "Helvetica Neue", "Helvetica", sans-serif;
+  font-size: 2vw;
+  color: #2A2C38;
+  display: block;
+} 
+
+html {  
+  flex-direction: column;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  flex-direction: row;
+  touch-action: none;
+  position: relative;
+  background: #1E1E1E;
+}
+
+* {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+div#collection {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.1rem;
+  row-gap: 0.1rem;
+  margin: 20px;
+}
+
+div#collection > * {
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: 20%;
+  text-align: center;
+  margin-bottom: -0.25rem;
+}
+
+img {
+    width: 100% ;
+}

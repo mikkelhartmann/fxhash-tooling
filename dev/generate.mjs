@@ -1,8 +1,9 @@
 import * as puppeteer from "puppeteer";
 import * as fs from "fs/promises";
 import * as path from "path";
+import * as os from "os";
 
-const iterations = 100;
+const iterations = 50;
 
 (async () => {
   const epoch = Math.floor(new Date().getTime() / 1000);
@@ -12,6 +13,15 @@ const iterations = 100;
 
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
+
+
+  // Add the beginning of the features file
+  
+  await fs.appendFile(
+    path.join(outputDir, 'features.js'), 
+    'let outputs = [' + os.EOL, 
+    function (err) {if (err) throw err;}
+  );
 
   for (var i = 0; i < iterations; i++) {
     console.log(`Iteration ${i}`);
@@ -34,7 +44,21 @@ const iterations = 100;
       path.join(outputDir, `${metadata.fxhash}.json`),
       JSON.stringify(metadata)
     );
+
+    await fs.appendFile(
+      path.join(outputDir, 'features.js'), 
+      JSON.stringify(metadata) + ',' + os.EOL, 
+      function (err) {if (err) throw err;}
+    );
+
   }
+
+  // Close up the list in the features file.
+  await fs.appendFile(
+    path.join(outputDir, 'features.js'), 
+    ']', 
+    function (err) {if (err) throw err;}
+  );
 
   await browser.close();
 })();

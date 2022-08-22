@@ -4,3 +4,4 @@ node_modules/
 screenshots/
 
 .DS_store
+output-*/

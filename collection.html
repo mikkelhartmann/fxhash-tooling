@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Collection</title>
+    <link rel="stylesheet" href="./collection.css">
+  </head>
+
+  <body>
+    <div id='selectors'></div>
+    <div id='collection'></div>
+  </body>
+
+  <script src="output-1661110407/features.js" charset="utf-8"></script>
+  
+  <script>
+    let outputFolder = 'output-1661110407'
+
+    let selectors = document.getElementById('selectors')
+    let collection = document.getElementById('collection')
+
+    // Get feature names
+    features = []
+    featureValues = {}
+    for (const [key, value] of Object.entries(outputs[0].features)) {
+        features.push(key)
+        featureValues[key] = []
+    }
+
+    // Loop over all outputs to get possible values for each feature
+    for (let o of outputs) {
+        features.forEach(f => {
+            featureValues[f].push(o.features[f])
+        })
+    }
+
+    // Turn feature values into a set
+    features.forEach(f => {featureValues[f] = new Set(featureValues[f]);})    
+
+    for (feature of features) {
+        
+        let dropdown = document.createElement('select')
+        dropdown.setAttribute('id', feature)
+        dropdown.addEventListener('change', filterOutputs, false)
+        
+        // Add base option of all
+        __addOption(dropdown, 'all')
+
+        // Add options to each feature
+        featureValues[feature].forEach(v => {__addOption(dropdown, v)})
+                
+        // Add to the document
+        selectors.append(dropdown)
+    }
+    
+    function __addOption(dropdown, value) {
+        let option = document.createElement('option')
+        option.setAttribute('value', value)
+        option.innerHTML = value
+        dropdown.append(option)
+    }
+
+
+    function filterOutputs() {
+
+        // Clear all items
+        let first = collection.firstElementChild;
+        while (first) {
+            first.remove();
+            first = collection.firstElementChild;
+        }
+
+        // Get all filters
+        selectedFilters = []
+        let filters = features.forEach(f => {
+            selectedFilters[f] = document.getElementById(f).value
+        })
+        
+        // Add all items according to filters
+        for (output of outputs) {
+        
+            // Filter out outputs that don't match the filters
+            let filterOut = false
+            for (const [f, value] of Object.entries(selectedFilters)) {
+                console.log(f, output.features[f], value)
+                if ( (value != 'all') && (output.features[f] != value)) {filterOut = true};
+            }
+            
+            if (filterOut) {continue}
+
+
+            // Append the image
+            let img = document.createElement('img')
+            img.setAttribute('src', `${outputFolder}/${output.fxhash}.png`)
+            img.setAttribute('class', 'outputImg')
+
+            let div = document.createElement('div')
+            div.setAttribute('class', 'container')
+
+            let link = document.createElement('a')
+            link.setAttribute('href', `${outputFolder}/${output.fxhash}.png`)
+            
+            link.append(img)
+            div.append(link)
+            collection.append(div)    
+        }
+    }
+    
+    filterOutputs()
+
+  </script>
+
+</html>
