@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Collection</title>
+    <!-- <link rel="stylesheet" href="./collection.css"> -->
+    <link rel="stylesheet" href="./singleView.css">
+  </head>
+
+  <body>
+    <div> FxHash: <span id="fxhash"></span></div>
+    <div id="features"> Features:</div>
+    <div id='a'></div>
+    
+  </body>
+
+  <script>
+    console.log('test')
+    let fxhash = getUrlParameter('fxhash') 
+    let folder = getUrlParameter('folder') 
+
+    let fxhashSpan = document.getElementById('fxhash')
+    fxhashSpan.innerHTML = fxhash
+
+    console.log(folder, fxhash)
+
+    let collection = document.getElementById('a')
+    for (let i=0; i < 5; i++) {
+        
+        let img = document.createElement('img')
+        img.setAttribute('src', `${folder}/${fxhash}.png`)
+        img.setAttribute('width', `${700 - (100*i*1.5)}`)
+        img.setAttribute('class', 'fixedImg')
+
+        let div = document.createElement('div')
+        div.append(img)
+        collection.append(div)    
+    }
+
+    function getUrlParameter(name) {
+      console.log('called')
+      name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+      var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+      var results = regex.exec(location.search);
+      return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    };
+  </script>
+
+</html>

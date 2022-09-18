@@ -13,8 +13,15 @@ function setup() {
   const width = 3400;
   const height = 3400;
 
-  createCanvas(width, height);
-  background(color(features.palette["background"]));
+  let canvas = createCanvas(width, height);
+  canvas.id('capture')
+
+  push()
+  fill(color(features.palette["background"]))
+
+  rect(0, 0, width, height)
+  
+  pop()
   push();
   fill(features.palette["fill"]);
   stroke(features.palette["stroke"]);

@@ -16,12 +16,19 @@ html, body {
   font-size: 2vw;
   color: #000000;
   display: block;
-  margin: auto;
-  padding: 5%;
 }
 
 html {  
   flex-direction: column;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  flex-direction: row;
+  touch-action: none;
+  position: relative;
+  background: #FFFFFF;
 }
 
 * {
@@ -85,3 +92,7 @@ select {
   margin-top: 1rem;
   font-weight: 600;
 }
+
+/* .fixedImg {
+  width: ; 
+} */

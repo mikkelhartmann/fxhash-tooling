@@ -3,7 +3,7 @@ import * as fs from "fs/promises";
 import * as path from "path";
 import * as os from "os";
 
-const iterations = 50;
+const iterations = 64;
 
 (async () => {
   const epoch = Math.floor(new Date().getTime() / 1000);
@@ -13,6 +13,8 @@ const iterations = 50;
 
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
+  page.setDefaultNavigationTimeout(120000)
+  page.setViewport({width:2000, height:2000})
 
 
   // Add the beginning of the features file
@@ -24,6 +26,8 @@ const iterations = 50;
   );
 
   for (var i = 0; i < iterations; i++) {
+    await sleep(2000)
+
     console.log(`Iteration ${i}`);
     await page.goto("http://localhost:8080");
 
@@ -35,6 +39,9 @@ const iterations = 50;
         })
       )
     );
+    console.log(metadata.fxhash)
+
+    await page.waitForSelector('#capture', {timeout: 90000});
 
     await page.screenshot({
       path: path.join(outputDir, `${metadata.fxhash}.png`),
@@ -61,4 +68,8 @@ const iterations = 50;
   );
 
   await browser.close();
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 })();

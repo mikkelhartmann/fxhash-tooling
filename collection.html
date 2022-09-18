@@ -8,14 +8,28 @@
   </head>
 
   <body>
+    <div>Features</div>
     <div id='selectors'></div>
+    <div id='sizes'>
+      Select Image Width
+      <input type="range" min="1" max="100" value="50" class="slider" id="imageSizeSlider">
+    </div>
     <div id='collection'></div>
   </body>
 
-  <script src="output-1661110407/features.js" charset="utf-8"></script>
+  <!-- This is an awkward way of loading data -->
+  <script src="output-1663503751/features.js" charset="utf-8"></script>
   
   <script>
-    let outputFolder = 'output-1661110407'
+    // Add option to change image size
+    let sizeSlider = document.getElementById('imageSizeSlider')
+    sizeSlider.addEventListener('change', changeImageSize, false)
+    
+    function changeImageSize() {  
+      document.documentElement.style.setProperty('--img-scale', sizeSlider.value+'%')
+    }
+
+    let outputFolder = 'output-1663503751'
 
     let selectors = document.getElementById('selectors')
     let collection = document.getElementById('collection')
@@ -23,15 +37,24 @@
     // Get feature names
     features = []
     featureValues = {}
+    featureValueCounts = {}
     for (const [key, value] of Object.entries(outputs[0].features)) {
         features.push(key)
         featureValues[key] = []
+        featureValueCounts[key] = {}
     }
 
-    // Loop over all outputs to get possible values for each feature
+    // Loop over all outputs to get possible values for each features
+    // Count them while we're at it
     for (let o of outputs) {
         features.forEach(f => {
             featureValues[f].push(o.features[f])
+
+            if (featureValueCounts[f][o.features[f]] == null) {
+              featureValueCounts[f][o.features[f]] = 0
+            }  else {
+              featureValueCounts[f][o.features[f]] += 1
+            }
         })
     }
 
@@ -40,28 +63,42 @@
 
     for (feature of features) {
         
-        let dropdown = document.createElement('select')
-        dropdown.setAttribute('id', feature)
-        dropdown.addEventListener('change', filterOutputs, false)
-        
-        // Add base option of all
-        __addOption(dropdown, 'all')
+      let featureDiv = document.createElement('div')
+      featureDiv.setAttribute('class', 'featureContainer')
+      
+      // Add the titel
+      let featureTitle = document.createElement('div')
+      featureTitle.setAttribute('class', 'featureTitle')
+      featureTitle.innerHTML = feature
+      featureDiv.append(featureTitle)
 
-        // Add options to each feature
-        featureValues[feature].forEach(v => {__addOption(dropdown, v)})
-                
-        // Add to the document
-        selectors.append(dropdown)
+      // Add Checkbox to each feature
+      featureValues[feature].forEach(v => {__addCheckbox(featureDiv, v, featureValueCounts[feature][v])})
+              
+      // Add to the document
+      selectors.append(featureDiv)
+    }
+
+    function __addCheckbox(droDownDiv, value, valueCnt) {
+      let div = document.createElement('div')
+      let input = document.createElement('input')
+      let label = document.createElement('label')
+
+      input.setAttribute('type', 'checkbox')
+      input.setAttribute('id', value)
+      input.setAttribute('name', value)
+      input.addEventListener('change', filterOutputs, false)
+      input.checked = true
+      
+
+      label.setAttribute('for', value)
+
+      div.innerHTML = value+ ` (${valueCnt}, ${(valueCnt/outputs.length * 100).toFixed(1)}%)`
+      div.append(input)
+      div.append(label)
+      droDownDiv.append(div)
     }
     
-    function __addOption(dropdown, value) {
-        let option = document.createElement('option')
-        option.setAttribute('value', value)
-        option.innerHTML = value
-        dropdown.append(option)
-    }
-
-
     function filterOutputs() {
 
         // Clear all items
@@ -72,9 +109,14 @@
         }
 
         // Get all filters
-        selectedFilters = []
-        let filters = features.forEach(f => {
-            selectedFilters[f] = document.getElementById(f).value
+        selectedFilters = {}
+
+        features.forEach(f => {
+          selectedFilters[f] = []
+          featureValues[f].forEach(v => {
+            if (document.getElementById(v).checked == false) {return;}
+            selectedFilters[f].push(v)
+          })
         })
         
         // Add all items according to filters
@@ -82,13 +124,11 @@
         
             // Filter out outputs that don't match the filters
             let filterOut = false
-            for (const [f, value] of Object.entries(selectedFilters)) {
-                console.log(f, output.features[f], value)
-                if ( (value != 'all') && (output.features[f] != value)) {filterOut = true};
+            for (const [f, value] of Object.entries(output.features)){
+              if (document.getElementById(value).checked == false) {filterOut = true}
             }
             
             if (filterOut) {continue}
-
 
             // Append the image
             let img = document.createElement('img')
@@ -99,7 +139,7 @@
             div.setAttribute('class', 'container')
 
             let link = document.createElement('a')
-            link.setAttribute('href', `${outputFolder}/${output.fxhash}.png`)
+            link.setAttribute('href', `singleInspect.html?folder=${outputFolder}&fxhash=${output.fxhash}`)
             
             link.append(img)
             div.append(link)
