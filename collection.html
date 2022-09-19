@@ -18,9 +18,11 @@
   </body>
 
   <!-- This is an awkward way of loading data -->
-  <script src="output-1663503751/features.js" charset="utf-8"></script>
+  <script src="outputs-1663532526/features.js" charset="utf-8"></script>
   
   <script>
+    let outputFolder = 'outputs-1663532526'
+
     // Add option to change image size
     let sizeSlider = document.getElementById('imageSizeSlider')
     sizeSlider.addEventListener('change', changeImageSize, false)
@@ -28,8 +30,6 @@
     function changeImageSize() {  
       document.documentElement.style.setProperty('--img-scale', sizeSlider.value+'%')
     }
-
-    let outputFolder = 'output-1663503751'
 
     let selectors = document.getElementById('selectors')
     let collection = document.getElementById('collection')
@@ -73,20 +73,20 @@
       featureDiv.append(featureTitle)
 
       // Add Checkbox to each feature
-      featureValues[feature].forEach(v => {__addCheckbox(featureDiv, v, featureValueCounts[feature][v])})
+      featureValues[feature].forEach(v => {__addCheckbox(featureDiv, feature, v, featureValueCounts[feature][v])})
               
       // Add to the document
       selectors.append(featureDiv)
     }
 
-    function __addCheckbox(droDownDiv, value, valueCnt) {
+    function __addCheckbox(droDownDiv, feature, value, valueCnt) {
       let div = document.createElement('div')
       let input = document.createElement('input')
       let label = document.createElement('label')
 
       input.setAttribute('type', 'checkbox')
-      input.setAttribute('id', value)
-      input.setAttribute('name', value)
+      input.setAttribute('id', `${feature}-${value}`)
+      input.setAttribute('name', `${feature}-${value}`)
       input.addEventListener('change', filterOutputs, false)
       input.checked = true
       
@@ -114,25 +114,27 @@
         features.forEach(f => {
           selectedFilters[f] = []
           featureValues[f].forEach(v => {
-            if (document.getElementById(v).checked == false) {return;}
+            console.log(`${f}-${v}`)
+            if (document.getElementById(`${f}-${v}`).checked == false) {return;}
             selectedFilters[f].push(v)
           })
         })
-        
+        console.log(selectedFilters)
         // Add all items according to filters
+        let numOutputs = outputs.length
         for (output of outputs) {
         
             // Filter out outputs that don't match the filters
             let filterOut = false
             for (const [f, value] of Object.entries(output.features)){
-              if (document.getElementById(value).checked == false) {filterOut = true}
+              if (document.getElementById(`${f}-${value}`).checked == false) {filterOut = true}
             }
             
             if (filterOut) {continue}
 
             // Append the image
             let img = document.createElement('img')
-            img.setAttribute('src', `${outputFolder}/${output.fxhash}.png`)
+            img.setAttribute('src', `${outputFolder}/${output.fxhash}.jpg`)
             img.setAttribute('class', 'outputImg')
 
             let div = document.createElement('div')
@@ -143,8 +145,11 @@
             
             link.append(img)
             div.append(link)
-            collection.append(div)    
+            collection.append(div)   
+            
+            numOutputs++
         }
+        console.log(numOutputs)
     }
     
     filterOutputs()
