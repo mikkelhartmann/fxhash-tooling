@@ -41,7 +41,7 @@ const iterations = 64;
     );
     console.log(metadata.fxhash)
 
-    await page.waitForSelector('#capture', {timeout: 90000});
+    page.waitForFunction("window.fxPreviewCalled == true")
 
     await page.screenshot({
       path: path.join(outputDir, `${metadata.fxhash}.png`),
