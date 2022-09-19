@@ -41,6 +41,7 @@ function setup() {
 
 function draw() {
   noLoop();
+  fxpreview
 }
 
 // Make the functions available to p5

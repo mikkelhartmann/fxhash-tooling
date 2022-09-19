@@ -80,23 +80,41 @@
     }
 
     function __addCheckbox(droDownDiv, feature, value, valueCnt) {
-      let div = document.createElement('div')
+      
+
+      let container = document.createElement('div')
+      container.setAttribute('class', 'container')
+      
       let input = document.createElement('input')
       let label = document.createElement('label')
 
+      let checkboxDiv = document.createElement('div')
       input.setAttribute('type', 'checkbox')
       input.setAttribute('id', `${feature}-${value}`)
       input.setAttribute('name', `${feature}-${value}`)
       input.addEventListener('change', filterOutputs, false)
       input.checked = true
-      
-
       label.setAttribute('for', value)
 
-      div.innerHTML = value+ ` (${valueCnt}, ${(valueCnt/outputs.length * 100).toFixed(1)}%)`
-      div.append(input)
-      div.append(label)
-      droDownDiv.append(div)
+      checkboxDiv.append(input)
+      checkboxDiv.append(label)
+
+      let textDiv = document.createElement('div')
+      let featureTextDiv = document.createElement('div')
+      let featureStatsDiv = document.createElement('div')
+      
+      featureTextDiv.innerHTML = value
+
+      featureStatsDiv.innerHTML = ` (${valueCnt}, ${(valueCnt/outputs.length * 100).toFixed(1)}%)`
+      featureStatsDiv.setAttribute('class', 'featureStatistics')
+
+      textDiv.append(featureTextDiv)
+
+      container.append(checkboxDiv)
+      container.append(textDiv)
+      container.append(featureStatsDiv)
+      
+      droDownDiv.append(container)
     }
     
     function filterOutputs() {

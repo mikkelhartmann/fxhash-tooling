@@ -12,7 +12,7 @@ html, body {
   align-items: center;
   text-align: center;
   background: #FFFFFF;
-  font-family: "Helvetica Neue", "Helvetica", sans-serif;
+  font-family: "Fira Code", monospace;
   font-size: 2vw;
   color: #000000;
   display: block;
@@ -60,13 +60,30 @@ div#collection > * {
 
 
 #selectors > * {
+  /* display: flex; */
   flex-grow: 0;
   flex-shrink: 1;
   flex-basis: 30%;
   text-align: left;
+  border: 3px solid;
+  font-size: 0.8rem;
 }
 
+.container {
+  display: flex;
+  flex-flow: column;
+  flex-direction: row;
+}
 
+.featureContainer {
+  margin: 0.2em;
+  padding: 0.4em;
+}
+
+.featureStatistics {
+  color: #c4c4c4;
+  font-size: 0.6rem;
+}
 
 img {
     width: 100% ;
@@ -82,6 +99,6 @@ select {
 }
 
 .featureTitle {
-  margin-top: 1rem;
-  font-weight: 600;
+  /* margin-top: 1rem; */
+  font-weight: 700;
 }
