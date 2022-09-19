@@ -10,26 +10,73 @@
 
   <body>
     <div> FxHash: <span id="fxhash"></span></div>
-    <div id="features"> Features:</div>
+    <div id="selectors"></div>
     <div id='a'></div>
     
   </body>
 
+  <script src="outputs-1663532526/features.js" charset="utf-8"></script>
+
   <script>
-    console.log('test')
     let fxhash = getUrlParameter('fxhash') 
     let folder = getUrlParameter('folder') 
 
     let fxhashSpan = document.getElementById('fxhash')
     fxhashSpan.innerHTML = fxhash
 
-    console.log(folder, fxhash)
+    
+    // Add the features
+    let selectors = document.getElementById('selectors')
+    // Get feature names
+    features = []
+    featureValues = {}
+    for (const [key, value] of Object.entries(outputs[0].features)) {
+        features.push(key)
+        featureValues[key] = []
+    }
 
+    // Loop over all outputs to get possible values for each features
+    // Count them while we're at it
+    for (let o of outputs) {
+      if (o.fxhash !== fxhash) {continue}
+
+      features.forEach(f => {
+          featureValues[f].push(o.features[f])
+      })
+    }
+
+    for (feature of features) {
+        
+      let featureDiv = document.createElement('div')
+      featureDiv.setAttribute('class', 'featureContainer')
+      
+      // Add the titel
+      let featureTitle = document.createElement('div')
+      featureTitle.setAttribute('class', 'featureTitle')
+      featureTitle.innerHTML = `${feature}: ${featureValues[feature]}`
+      featureDiv.append(featureTitle)
+      console.log(featureValues[feature])
+
+      // Add Checkbox to each feature
+      // featureValues[feature].forEach(v => {__addCheckbox(featureDiv, feature, v, [feature][v])})
+              
+      // Add to the document
+      selectors.append(featureDiv)
+    }
+
+    function __addCheckbox(droDownDiv, feature, value, valueCnt) {
+      let div = document.createElement('div')
+      let span = document.createElement('span')
+
+      // div.innerHTML = `${feature}: ${value}`
+    }
+
+    // Add the image
     let collection = document.getElementById('a')
-    for (let i=0; i < 5; i++) {
+    for (let i=0; i < 1; i++) {
         
         let img = document.createElement('img')
-        img.setAttribute('src', `${folder}/${fxhash}.png`)
+        img.setAttribute('src', `${folder}/${fxhash}.jpg`)
         img.setAttribute('width', `${700 - (100*i*1.5)}`)
         img.setAttribute('class', 'fixedImg')
 
